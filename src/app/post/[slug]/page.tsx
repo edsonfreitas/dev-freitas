@@ -9,12 +9,13 @@ import {getDataSlug} from '@/utils/actions/get_data_slug';
 import { Hero } from '@/components/hero';
 import { Container } from '@/components/container';
 
-export async function generateMetadata({ params: { slug } }: {
-  params: { slug: string }
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
+  const { slug } = await props.params; // Aguarda o slug chegar
 
-  try{
-    const{ objects }: PostProps = await getDataSlug(slug)
+  try {
+    const { objects }: PostProps = await getDataSlug(slug);
     .catch(() =>{
       return {
         title: "DevFreitas - Desenvolvedor Web Full Stack & Especialista em React!",
@@ -52,11 +53,13 @@ export async function generateMetadata({ params: { slug } }: {
   }
 }
 
-export default async function Page({params: { slug } }: {
-  params: { slug: string }
-}){
-  const{ objects }: PostProps = await getDataSlug(slug)
-  console.log(JSON.stringify(objects, null, 2))
+export default async function Page(props: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await props.params; // Aguarda o slug aqui também
+  
+  const { objects }: PostProps = await getDataSlug(slug);
+  
 
   return(
     <>
